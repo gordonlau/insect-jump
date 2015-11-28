@@ -1,38 +1,54 @@
 #!/usr/bin/python
 
-class InsectJump:
-    '''My Non-list comprehension version of insect jump 
-        step_set is the possible step for the insect to jump
-        target is the total distance to be travelled.
 
+
+
+def iterate_count(step_set,target):
+    ''' Count the possible combination for insect jump problem
+    >>> iterate_count([1,2,3],5)
+    13
+    >>> iterate_count([],5)
+    0
+    >>> iterate_count([1,2,3],0)
+    0
+    >>> iterate_count([1,2,3],-1)
+    0
     '''
+    if target < 0:
+        return 0
+    count = 0
+    for step in step_set:
+        if target - step == 0:
+            count += 1
+        else:
+            count += iterate_count(step_set,target-step)
+    return count
 
-    def __init__(self):
-        ''' Nothing to do for init'''
-        pass
-    def iterate_count(self,step_set,target,count=0):
-        ''' Count the possible combination for insect jump problem'''
-        if target == 0:
-            return count +1
-        elif target < 0:
-            return 
-        for step in step_set:
-            if step  > target:
-                break
-            elif step <= target:
-                count = self.iterate_count(step_set,target-step,count )
-        return count
-    
-    def iterate_jump(self,step_set,target,single_result=[],result_list= []):
-        ''' Dispaly all the possible combination in a list of result'''
-        if target == 0:
-            result_list.append(single_result)
-        elif target < 0:
-            return 
-        for step in step_set:
-            if step  > target:
-                break
-            elif step <= target:
-                self.iterate_jump(step_set, target-step,single_result+[step],result_list)
-        return result_list
 
+
+def iterate_jump(step_set,target,step_sequence=[]):
+    ''' Display all the possible combination in a list of result
+    >>> iterate_jump([1,2,3],3)
+    [[1, 1, 1], [1, 2], [2, 1], [3]]
+    >>> iterate_jump([],3)
+    []
+    >>> iterate_jump([1,2,3],0)
+    []
+    >>> iterate_jump([1,2,3],-1)
+    []
+    '''
+    if target < 0:
+        return []
+    results = []
+    for step in step_set:
+        if target - step == 0:
+            results += [step_sequence + [step]]
+        else:
+            results += iterate_jump(step_set, target-step,step_sequence +[step])
+    return results
+
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
